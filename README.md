@@ -22,7 +22,6 @@ Tested on Python 3.6.4
 
 `pip install dphmix`
 
-
 ## Classes ##
 
 ### VariationalDPHM ###
@@ -31,20 +30,18 @@ Tested on Python 3.6.4
 
 Implements MFVI with conjugate priors using the Stick-breaking Process for Dirichlet Process Mixture Models where the independent variates follow Normal, Bernoulli & Poisson distributions. It can also handle must-link constraints.
 
-For MFVI, add 'sb1' & 'sb2' to hyperparameters for variational posterior of v. Variational expectations are contained in dictionaries where keys=['lntau','tau','mu','lnp','lnip','lnlam','lam','lnv','lniv'] where the values of 'mu','tau' & 'lntau' must be lists of numbers with length G, the value of 'lnp' & 'lnip' must be a list of numbers with length B, the value of 'lam' & 'lnlam' must be a list of numbers with length P and the values of 'lnv' & 'lniv' must be numbers.
-
 Parameter | Data type | Description
 :---: | :---: | :---
 alpha | float>0 | required. The alpha parameter for the Dirichlet Process. Determines how precisely the model should look for clusters. Higher values will create more clusters.
 iterations | int>=1 | required. The maximum number of iterations.
 max\_clusters | int>=2 | required. The maximum number of clusters the model can create.
-tol | float>0 | optional (default: 1e-3). If using MFVI, the algorithm stops when the difference between evidence lower bounds (ELBOs) in 2 consecutive iterations is less than tol.
+tol | float>0 | optional (default: 1e-3). The algorithm stops when the difference between evidence lower bounds (ELBOs) in 2 consecutive iterations is less than tol.
 n\_jobs | int>=1 | optional (default: 1). The number of cores to use.
-random\_state | int>=0 or None | optional (default: None). If using MFVI, this determines the initial clusters and ensures reproducibility.
+random\_state | int>=0 or None | optional (default: None). Determines the initial clusters and ensures reproducibility.
 
 Method | Description
 :---: | :---
-fit_predict(X[, ml, hyperparameters]) | Fits a model & predicts cluster assignments for each observation in X. ml can be passed to force certain observations to cluster together.
+fit_predict(X[, ml, hyperparameters]) | Fits a DPHM model & predicts cluster assignments for each observation in X. ml can be passed to force certain observations to cluster together.
 predict(X) | Predicts cluster assignments for each observation in X along with probabilities of belonging to each cluster using the fitted model.
 get\_params() | Gets arguments for the model.
 
@@ -76,8 +73,6 @@ Returns a dictionary of arguments for the model
 
 Implements a Gibbs sampler with conjugate priors using the Chinese Restaurant Process for Dirichlet Process Mixture Models where the independent variates follow Normal, Bernoulli & Poisson distributions. It can handle must-link & can't-link constraints.
 
-Parameters are contained in dictionaries where keys=['mu','tau','p','lam'] where the values of 'mu' & 'tau' are lists of numbers with length G, the value of 'p' is a list of numbers with length B and the value of 'lam' is a list of numbers with length P. 'mu' & 'tau' represent means and precisions, respectively, of Gaussian features, 'p' represents probability parameters of Bernoullian features and 'lam' represents average rate parameters of Poissonian features. In every list, values are in the same order that their corresponding features appear in the data.
-
 Parameter | Data type | Description
 :---: | :---: | :---
 alpha | float>0 | required. The alpha parameter for the Dirichlet Process. Determines how precisely the model should look for clusters. Higher values will create more clusters.
@@ -100,7 +95,7 @@ Parameter | Data type | Description
 X | pandas.DataFrame | required. The data to cluster. Rows are observations and columns are variables.
 ml | list | optional. A list of must-link constraints.
 cl | list | optional. A list of can't-link constraints where a can't-link constraint is a list of 2 indices corresponding to observations that cannot cluster together.
-hyperparameters | dict or None | optional (there are built-in default hyperparameters). Same as the VariationalDPHM.fit_predict
+hyperparameters | dict or None | optional (there are built-in default hyperparameters). Same as the VariationalDPHM.fit_predict hyperparameters
 
 `predict(X)`
 
@@ -113,6 +108,7 @@ X | pandas.DataFrame | required. The data to cluster.
 `get_params()`
 
 Returns a dictionary of arguments for the model
+
 ### MFVICluster ###
 
 Attribute | Data type | Description
@@ -132,6 +128,10 @@ Attribute | Data type | Description
 c | numpy.array | Cluster assignments of the observations in the data in the order they appear in the data.
 phi | list | List of parameters where the ith element is a dict of parameters for the ith cluster.
 n\_clusters | int>=1 | The number of clusters found
+
+## Pre-print ##
+
+TF Mehdi, G Singh, JA Mitchell & AM Moses. (2018). Variational Infinite Heterogeneous Mixture Model for Semi-supervised Clustering of Heart Enhancers. bioRxiv. doi: https://doi.org/10.1101/442392
 
 ## References: ##
 

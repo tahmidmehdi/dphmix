@@ -68,7 +68,7 @@ the values of 'lnv' & 'lniv' must be numbers
     """
     def __init__(self, alpha, iterations, max_clusters, tol=1e-3, n_jobs=1, random_state=None):
         """
-        Constructs a DirichletHeterogeneousMixture object
+        Constructs a VariationalDPHM object
 
         :param float>0 alpha: the alpha parameter of the Dirichlet Process distribution
         :param int>=1 iterations: maximum number of iterations
@@ -291,3 +291,4 @@ the values of 'lnv' & 'lniv' must be numbers
         # pick most probable cluster for each observation
         c = np.array(Ez.argmax(axis=1)).reshape(n)
         return c, Ez
+

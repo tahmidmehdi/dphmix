@@ -59,7 +59,7 @@ where (mu[i],tau[i]) ~ NormalGamma(nu[i],rho[i],a[i],b[i]), i=1..n_cts
     """
     def __init__(self, alpha, iterations, max_clusters, n_jobs=1):
         """
-        Constructs a DirichletHeterogeneousMixture object
+        Constructs a GibbsDPHM object
 
         :param float>0 alpha: the alpha parameter of the Dirichlet Process distribution
         :param int>=1 iterations: maximum number of iterations
@@ -293,3 +293,4 @@ where (mu[i],tau[i]) ~ NormalGamma(nu[i],rho[i],a[i],b[i]), i=1..n_cts
         # pick most probable cluster for each observation
         c = np.array(prob.argmax(axis=1)).reshape(n)
         return c, prob
+
