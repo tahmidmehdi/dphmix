@@ -1,7 +1,7 @@
 # dphmix
 # Unsupervised and Semi-supervised Dirichlet Process Heterogeneous Mixtures #
 
-A Python package that implements Dirichlet Process Heterogeneous Mixtures (DPHMs) of exponential family distributions for clustering heterogeneous data without choosing the number of clusters. Inference can be performed with Gibbs sampling [2] or coordinate ascent mean-field variational inference (MFVI) [1]. For semi-supervised learning, Gibbs sampling supports must-link and can't-link constraints [3]. A novel variational inference algorithm was derived to handle must-link constraints.
+A Python package that implements Dirichlet Process Heterogeneous Mixtures (DPHMs) of exponential family distributions for clustering heterogeneous data without choosing the number of clusters. Inference can be performed with Gibbs sampling [1] or coordinate ascent mean-field variational inference (MFVI) [2]. For semi-supervised learning, Gibbs sampling supports must-link and can't-link constraints [3]. A novel variational inference algorithm was derived to handle must-link constraints.
 
 It currently supports the following distributions:
 
@@ -22,6 +22,41 @@ Tested on Python 3.6.4
 
 `pip install dphmix`
 
+## Tutorial ##
+
+In this tutorial, we cluster genomic regions bound by the Nkx2-5 transcription factor based on biological features.
+
+1. Download the Nkx2-5 dataset from https://github.com/tahmidmehdi/dphmix/tree/master/data.
+2. In Python, import the package and store the data in a dataframe. The rows represent observations and columns represent features:
+```python
+from dphmix.VariationalDPHM import *
+X = pd.read_csv('nkxData.csv', indexcol=0, header=0)
+# drop cluster and class assignment columns. These are just results from our paper.
+X.drop(['Cluster', 'Class'] , axis=1, inplace=True)
+```
+3. Set hyperparameters for the model. Descriptions for hyperparameters are shown in the next section.
+```python
+# prior parameters for 100 Gaussian features
+nu = [0]*100
+rho = [1]*100
+a = [1]*100
+b = [1]*100
+# prior parameters for 5 Bernoulli features
+gamma = [1]*5
+delta = [1]*5
+# prior parameters for 9 Poisson features
+zeta = 1/np.std(X[X.columns[105:]])
+eps = zeta*np.mean(X[X.columns[105:]])
+# dictionary of hyperparameters
+h = dict(nu=nu, rho=rho, a=a, b=b, gamma=gamma, delta=delta, eps=eps, zeta=zeta)
+```
+4. Initialize a 'VariationalDPHM' model and fit it to X. Information about parameters and outputs is provided in the next section.
+```python
+model = VariationalDPHM(alpha=1, iterations=1000 , max clusters=100 , tol=10, random_state=42)
+clusters = model.fit_predict(X, hyperparameters=h)
+```
+Features with 'float' data types are Gaussian. Features with 'int' data types that only have values of 0 or 1 are Bernoulli. Features with 'int' that only have non-negative values with at least one integer greater than 1 are Poisson. If your feature has negative integer values, you can add a constant to them to shift them to the non-negative integer space.
+
 ## Classes ##
 
 ### VariationalDPHM ###
@@ -41,7 +76,7 @@ random\_state | int>=0 or None | optional (default: None). Determines the initia
 
 Method | Description
 :---: | :---
-fit_predict(X[, ml, hyperparameters]) | Fits a DPHM model & predicts cluster assignments for each observation in X. ml can be passed to force certain observations to cluster together.
+fit\_predict(X[, ml, hyperparameters]) | Fits a DPHM model & predicts cluster assignments for each observation in X. ml can be passed to force certain observations to cluster together.
 predict(X) | Predicts cluster assignments for each observation in X along with probabilities of belonging to each cluster using the fitted model.
 get\_params() | Gets arguments for the model.
 
@@ -82,7 +117,7 @@ n\_jobs | int>=1 | optional (default: 1). The number of cores to use.
 
 Method | Description
 :---: | :---
-fit_predict(X[, ml, cl, hyperparameters]) | Fits a model & predicts cluster assignments for each observation in X. ml can be passed to force certain observations to cluster together. cl can be passed to force certain observations to be in different clusters.
+fit\_predict(X[, ml, cl, hyperparameters]) | Fits a model & predicts cluster assignments for each observation in X. ml can be passed to force certain observations to cluster together. cl can be passed to force certain observations to be in different clusters.
 predict(X) | Predicts cluster assignments for each observation in X along with probabilities of belonging to each cluster using the fitted model.
 get\_params() | Gets arguments for the model.
 
@@ -95,7 +130,7 @@ Parameter | Data type | Description
 X | pandas.DataFrame | required. The data to cluster. Rows are observations and columns are variables.
 ml | list | optional. A list of must-link constraints.
 cl | list | optional. A list of can't-link constraints where a can't-link constraint is a list of 2 indices corresponding to observations that cannot cluster together.
-hyperparameters | dict or None | optional (there are built-in default hyperparameters). Same as the VariationalDPHM.fit_predict hyperparameters
+hyperparameters | dict or None | optional (there are built-in default hyperparameters). Same as the VariationalDPHM.fit\_predict hyperparameters
 
 `predict(X)`
 
@@ -129,15 +164,14 @@ c | numpy.array | Cluster assignments of the observations in the data in the ord
 phi | list | List of parameters where the ith element is a dict of parameters for the ith cluster.
 n\_clusters | int>=1 | The number of clusters found
 
-## Pre-print ##
+## Citation ##
 
-TF Mehdi, G Singh, JA Mitchell & AM Moses. (2018). Variational Infinite Heterogeneous Mixture Model for Semi-supervised Clustering of Heart Enhancers. bioRxiv. doi: https://doi.org/10.1101/442392
+Tahmid F Mehdi, Gurdeep Singh, Jennifer A Mitchell, Alan M Moses (2019) Variational Infinite Heterogeneous Mixture Model for Semi-supervised Clustering of Heart Enhancers. Bioinformatics, , btz064. https://doi.org/10.1093/bioinformatics/btz064
 
 ## References: ##
 
-[1] DM Blei & MI Jordan. (2006). Variational Inference for Dirichlet Process Mixtures. Bayesian Analysis, 1(1), 121-144.
+[1] RM Neal. (2000). Markov Chain Sampling Methods for Dirichlet Process Mixture Models. Journal of Computational and Graphical Statistics, 9(2), 249-265.
 
-[2] RM Neal. (2000). Markov Chain Sampling Methods for Dirichlet Process Mixture Models. Journal of Computational and Graphical Statistics, 9(2), 249-265.
+[2] DM Blei & MI Jordan. (2006). Variational Inference for Dirichlet Process Mixtures. Bayesian Analysis, 1(1), 121-144.
 
 [3] A Vlachos, A Korhonen & Z Ghahramani. (2009). Unsupervised and Constrained Dirichlet Process Mixture Models for Verb Clustering. Proceedings of the EACL 2009 Workshop on GEMS: GEometical Models of Natural Language Semantics, 74-82.
-
