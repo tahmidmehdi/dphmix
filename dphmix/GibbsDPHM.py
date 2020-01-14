@@ -146,17 +146,17 @@ where (mu[i],tau[i]) ~ NormalGamma(nu[i],rho[i],a[i],b[i]), i=1..n_cts
                 if c[i] not in c_noi:  # X[i] is the only one from its cluster
                     phi[c[i]] = None  # delete its cluster
 
-                uniq_clusters = np.unique(c_noi)
+                all_clusters = np.unique(c_noi)
                 # remove clusters of data that the ith point cannot cluster with
                 if i in cantLink:
-                    uniq_clusters = [clust for clust in uniq_clusters if clust not in map(lambda a: c[a], cantLink[i])]
+                    candidate_clusters = [clust for clust in all_clusters if clust not in map(lambda a: c[a], cantLink[i])]
                 # dictionary of probabilities of each cluster
                 prob_c = {}
                 # set probabilities for existing clusters according to Chinese Restaurant Process
-                for clust in uniq_clusters:
+                for clust in candidate_clusters:
                     prob_c[clust] = n_noi[clust]*likelihood(X.iloc[i], phi[clust])
                 # find the lowest non-negative integer that hasn't indexed a cluster
-                new_cluster = next(filterfalse(uniq_clusters.__contains__, count(0)))
+                new_cluster = next(filterfalse(all_clusters.__contains__, count(0)))
                 # set probability for new cluster
                 prob_c[new_cluster] = self.alpha*integral[i]
                 c[i] = assign_cluster(prob_c)
@@ -171,18 +171,18 @@ where (mu[i],tau[i]) ~ NormalGamma(nu[i],rho[i],a[i],b[i]), i=1..n_cts
                 c_noi = np.delete(c, ml[link], axis=0)  # clusters without X[i]
                 n_noi = Counter(c_noi)  # count frequency of each cluster
 
-                uniq_clusters = np.unique(c_noi)
-                # remove clusters of points the group cannot cluster with from uniq_clusters
+                all_clusters = np.unique(c_noi)
+                # remove clusters of points the group cannot cluster with from all_clusters
                 if i in cantLink_ml:
-                    uniq_clusters = [clust for clust in uniq_clusters if clust not in map(lambda a: c[a], cantLink_ml[link])]
+                    candidate_clusters = [clust for clust in all_clusters if clust not in map(lambda a: c[a], cantLink_ml[link])]
                 # dictionary of probabilities of each cluster
                 prob_c = {}
                 # set probabilities for existing clusters according to Chinese Restaurant Process
-                for clust in uniq_clusters:
+                for clust in candidate_clusters:
                     # use joint probability of data in ml[link]
                     prob_c[clust] = n_noi[clust]*likelihood(X.iloc[ml[link]], phi[clust])
                 # find the lowest non-negative integer that hasn't indexed a cluster
-                new_cluster = next(filterfalse(uniq_clusters.__contains__, count(0)))
+                new_cluster = next(filterfalse(all_clusters.__contains__, count(0)))
                 # set probability for new cluster
                 prob_c[new_cluster] = self.alpha*integral_ml[link]
                 c[ml[link]] = assign_cluster(prob_c)

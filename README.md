@@ -166,7 +166,7 @@ n\_clusters | int>=1 | The number of clusters found
 
 ## Citation ##
 
-Tahmid F Mehdi, Gurdeep Singh, Jennifer A Mitchell, Alan M Moses (2019) Variational Infinite Heterogeneous Mixture Model for Semi-supervised Clustering of Heart Enhancers. Bioinformatics, , btz064. https://doi.org/10.1093/bioinformatics/btz064
+Tahmid F Mehdi, Gurdeep Singh, Jennifer A Mitchell, Alan M Moses, Variational infinite heterogeneous mixture model for semi-supervised clustering of heart enhancers, Bioinformatics, Volume 35, Issue 18, 15 September 2019, Pages 3232–3239, https://doi.org/10.1093/bioinformatics/btz064
 
 ## References: ##
 
