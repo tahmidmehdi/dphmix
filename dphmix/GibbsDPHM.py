@@ -147,6 +147,7 @@ where (mu[i],tau[i]) ~ NormalGamma(nu[i],rho[i],a[i],b[i]), i=1..n_cts
                     phi[c[i]] = None  # delete its cluster
 
                 all_clusters = np.unique(c_noi)
+                candidate_clusters = np.copy(all_clusters)
                 # remove clusters of data that the ith point cannot cluster with
                 if i in cantLink:
                     candidate_clusters = [clust for clust in all_clusters if clust not in map(lambda a: c[a], cantLink[i])]
@@ -172,6 +173,7 @@ where (mu[i],tau[i]) ~ NormalGamma(nu[i],rho[i],a[i],b[i]), i=1..n_cts
                 n_noi = Counter(c_noi)  # count frequency of each cluster
 
                 all_clusters = np.unique(c_noi)
+                candidate_clusters = np.copy(all_clusters)
                 # remove clusters of points the group cannot cluster with from all_clusters
                 if i in cantLink_ml:
                     candidate_clusters = [clust for clust in all_clusters if clust not in map(lambda a: c[a], cantLink_ml[link])]
