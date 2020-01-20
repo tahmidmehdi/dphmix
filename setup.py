@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='dphmix',
-      version='0.1.2',
+      version='0.2.0',
       description='Unsupervised and Semi-supervised Dirichlet Process Heterogeneous Mixtures',
       long_description='Implements Dirichlet Process Heterogeneous Mixtures of exponential family distributions for clustering heterogeneous data without choosing the number of clusters. Inference can be performed with Gibbs sampling or coordinate ascent mean-field variational inference. For semi-supervised learning, Gibbs sampling supports must-link and cannot-link constraints. A novel variational inference algorithm was derived to handle must-link constraints.',
       classifiers=[
@@ -18,7 +18,7 @@ setup(name='dphmix',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
       ],
       url='https://github.com/tahmidmehdi/dphmix',
-      download_url='https://github.com/tahmidmehdi/dphmix/archive/v0.1.2.tar.gz',
+      download_url='https://github.com/tahmidmehdi/dphmix/archive/v0.2.0.tar.gz',
       author='Tahmid Mehdi',
       author_email='tfmehdi@cs.toronto.edu',
       license='GNU GPL v3.0',
