@@ -30,7 +30,7 @@ In this tutorial, we cluster genomic regions bound by the Nkx2-5 transcription f
 2. In Python, import the package and store the data in a dataframe. The rows represent observations and columns represent features:
 ```python
 from dphmix.VariationalDPHM import *
-X = pd.read_csv('nkxData.csv', indexcol=0, header=0)
+X = pd.read_csv('nkxData.csv', index_col=0, header=0)
 # drop cluster and class assignment columns. These are just results from our paper.
 X.drop(['Cluster', 'Class'] , axis=1, inplace=True)
 ```
@@ -52,7 +52,7 @@ h = dict(nu=nu, rho=rho, a=a, b=b, gamma=gamma, delta=delta, eps=eps, zeta=zeta)
 ```
 4. Initialize a 'VariationalDPHM' model and fit it to X. Information about parameters and outputs is provided in the next section.
 ```python
-model = VariationalDPHM(alpha=1, iterations=1000 , max clusters=100 , tol=10, random_state=42)
+model = VariationalDPHM(alpha=1, iterations=1000 , max_clusters=100 , tol=10, random_state=42)
 clusters = model.fit_predict(X, hyperparameters=h)
 ```
 Features with 'float' data types are Gaussian. Features with 'int' data types that only have values of 0 or 1 are Bernoulli. Features with 'int' that only have non-negative values with at least one integer greater than 1 are Poisson. If your feature has negative integer values, you can add a constant to them to shift them to the non-negative integer space.
